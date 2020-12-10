@@ -100,7 +100,7 @@ The provided demo players assume the stream-key is called `test` and the player 
 Released under MIT license.
 
 ## More info
- * **GitHub repo**: <https://github.com/indiolopez/rtmp-hls-server.git>
+ * **GitHub repo**: <https://github.com/MarceloFabianLopez/rtmp-hls-server>
 
  * **Docker Hub image**: <https://hub.docker.com/indiolopez/rtmp-hls-server>
 

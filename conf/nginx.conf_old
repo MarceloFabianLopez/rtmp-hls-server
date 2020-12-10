@@ -11,19 +11,12 @@ rtmp {
 		listen 1935; # Listen on standard RTMP port
 		chunk_size 4000; 
 		# ping 30s;
-		 notify_method get;
+		# notify_method get;
 
 		# This application is to accept incoming stream
 		application live {
-
-				on_publish http://localhost:8080/auth;
-
 			live on; # Allows live input
-			record off;
-			#record all;
-             # The directory in which the recordings will be stored
-             #record_path /var/www/html/recordings;
-            # record_unique on;
+
 			# for each received stream, transcode for adaptive streaming
 			# This single ffmpeg command takes the input and transforms
 			# the source into 4 different streams with different bitrates
@@ -34,37 +27,7 @@ rtmp {
 						-c:v libx264 -c:a aac -b:v 1024k -b:a 128k -vf "scale=960:trunc(ow/a/2)*2"  -tune zerolatency -preset superfast -crf 23 -f flv rtmp://localhost:1935/show/$name_high
 						-c:v libx264 -c:a aac -b:v 1920k -b:a 128k -vf "scale=1280:trunc(ow/a/2)*2" -tune zerolatency -preset superfast -crf 23 -f flv rtmp://localhost:1935/show/$name_hd720
 						-c copy -f flv rtmp://localhost:1935/show/$name_src;
-		push rtmp://localhost/face2;
-		push rtmp://a.rtmp.youtube.com/live2/e4hs-976y-x435-2vcw-ej3f;
-
-#		push rtmp ://localhost/youtube;
-		#push rtmp://localhost:1936/rtmp/<<Facebook persistent stream key>>;
-		#push rtmps://live-api-s.facebook.com:443/rtmp/100788445235843?s_bl=1&s_ps=1&s_psm=1&s_sw=0&s_vt=api-s&a=AbzGm-G-0YsW11nd
 		}
-		application face2 {
-  							live on;
-							record off;
-							#Only allow localhost to publish
-							allow publish 127.0.0.1;
-							deny publish all;
-							# Push URL with the YouTube stream key
-							#push rtmps://live-api-s.facebook.com:443/rtmp/100788445235843?s_bl=1&s_ps=1&s_psm=1&s_sw=0&s_vt=api-s&a=AbzGm-G-0YsW11nd;
-							push rtmp://127.0.0.1:19350/rtmp/100788445235843?s_bl=1&s_ps=1&s_psm=1&s_sw=0&s_vt=api-s&a=AbzGm-G-0YsW11nd;
-							
-							}
-
-
-		application youtube {
-  							live on;
-							record off;
-							#Only allow localhost to publish
-							allow publish 127.0.0.1;
-							deny publish all;
-							# Push URL with the YouTube stream key
-							push rtmp://a.rtmp.youtube.com/live2/e4hs-976y-x435-2vcw-ej3f;
-							}
-
-
 
 		# This is the HLS application
 		application show {
@@ -88,12 +51,6 @@ rtmp {
 			dash_fragment 3;
 			dash_playlist_length 20;			
 		}
-		#application  /live {
-        #if ($arg_pwd = 'peron') {
-         #   return 200;
-          #  }
-           # return 401;
-	#	}
 	}
 }
 
@@ -108,16 +65,6 @@ http {
 	server {
 		listen 8080;
 		
-		location  /auth {
-		if ($arg_pwd = 'peron') {
-            return 200;
-            }
-            return 401;
-		}
-
-
-
-
 		# Serve HLS fragments
 		location /hls {
 			types {

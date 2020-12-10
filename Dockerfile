@@ -2,7 +2,8 @@ ARG DEBIAN_VERSION=stretch-slim
 
 ##### Building stage #####
 FROM debian:${DEBIAN_VERSION} as builder
-MAINTAINER Tareq Alqutami <tareqaziz2010@gmail.com>
+MAINTAINER Marcelo Lopez<cmflopez@gmail.com>
+# thanks Tareq Alqutami <tareqaziz2010@gmail.com>
 
 # Versions of nginx, rtmp-module and ffmpeg 
 ARG  NGINX_VERSION=1.17.5
@@ -91,7 +92,7 @@ RUN apt-get update && \
 		ca-certificates openssl libpcre3-dev \
 		librtmp1 libtheora0 libvorbis-dev libmp3lame0 \
 		libvpx4 libx264-dev libx265-dev && \
-    rm -rf /var/lib/apt/lists/*
+	rm -rf /var/lib/apt/lists/*
 
 # Copy files from build stage to final stage	
 COPY --from=builder /usr/local /usr/local
@@ -99,6 +100,11 @@ COPY --from=builder /etc/nginx /etc/nginx
 COPY --from=builder /var/log/nginx /var/log/nginx
 COPY --from=builder /var/lock /var/lock
 COPY --from=builder /var/run/nginx /var/run/nginx
+
+RUN apt-get update && \
+	apt-get install -y stunnel && \
+	rm -rf /var/lib/apt/lists/*
+
 
 # Forward logs to Docker
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
@@ -109,8 +115,13 @@ COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 # Copy  html players to container
 COPY players /usr/local/nginx/html/players
-
+COPY conf/stunnel /etc/default/stunnel4
+COPY conf/stunnel.conf /etc/stunnel/stunnel.conf
+RUN stunnel4 /etc/stunnel/stunnel.conf
 EXPOSE 1935
 EXPOSE 8080
 
+
 CMD ["nginx", "-g", "daemon off;"]
+
+

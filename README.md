@@ -1,3 +1,11 @@
+# Modificado players para que se pueda usar en 1936
+
+# Modificado Dockerfile para que instale stunnel
+# Copiado los archivos de configuracion de stunnel y nginx
+# se modificaron los players para que vean el puerto 1936
+
+# nginx.conf envia a face via stunnel
+
 # RTMP-HLS Docker
 
 **Docker image for video streaming server that supports RTMP, HLS, and DASH streams.**
@@ -57,7 +65,7 @@ where `custom.conf` is the new conf file for Nginx.
  * **Configure [OBS](https://obsproject.com/) to stream content:** <br />
 Go to Settings > Stream, choose the following settings:
    * Service: Custom Streaming Server.
-   * Server: `rtmp://<server ip>:1935/live`. 
+   * Server: `rtmp://<server ip>:1936/live`. 
    * Stream key: anything you want, however provided video players assume stream key is `test`
 
 ### To view the stream
@@ -84,7 +92,7 @@ The provided demo players assume the stream-key is called `test` and the player 
 	* These web players are hardcoded to play stream key "test" at localhost.
 	* To change the stream source for these players. Download the html files and modify the `src` attribute in the video tag in the html file. You can then mount the modified files to the container as follows:
 		```
-		docker run -d -p 1935:1935 -p 8080:8080 -v custom_players:/usr/local/nginx/html/players alqutami/rtmp-hls
+		docker run -d -p 1936:1935 -p 8080:8080 -v custom_players:/usr/local/nginx/html/players alqutami/rtmp-hls
 		```
 		where `custom_players` is the directory holding the modified html files.
 
@@ -92,6 +100,7 @@ The provided demo players assume the stream-key is called `test` and the player 
 Released under MIT license.
 
 ## More info
- * **GitHub repo**: <https://github.com/TareqAlqutami/rtmp-hls-server.git>
+ * **GitHub repo**: <https://github.com/indiolopez/rtmp-hls-server.git>
 
- * **Docker Hub image**: <https://hub.docker.com/r/alqutami/rtmp-hls>
+ * **Docker Hub image**: <https://hub.docker.com/indiolopez/rtmp-hls-server>
+

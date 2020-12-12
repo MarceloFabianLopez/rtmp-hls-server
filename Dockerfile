@@ -117,11 +117,9 @@ COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY players /usr/local/nginx/html/players
 COPY conf/stunnel /etc/default/stunnel4
 COPY conf/stunnel.conf /etc/stunnel/stunnel.conf
+
 RUN stunnel4 /etc/stunnel/stunnel.conf
 EXPOSE 1935
 EXPOSE 8080
 
-
 CMD ["nginx", "-g", "daemon off;"]
-
-

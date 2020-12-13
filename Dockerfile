@@ -113,6 +113,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 # Copy  nginx config file to container
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
+
 # Copy  html players to container
 COPY players /usr/local/nginx/html/players
 COPY conf/stunnel /etc/default/stunnel4
@@ -121,5 +122,8 @@ COPY conf/stunnel.conf /etc/stunnel/stunnel.conf
 RUN stunnel4 /etc/stunnel/stunnel.conf
 EXPOSE 1935
 EXPOSE 8080
-
-CMD ["nginx", "-g", "daemon off;"]
+WORKDIR /conf
+COPY conf/cambiar_claves.sh  /conf 
+RUN chmod +x cambiar_claves.sh
+#CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "t"]
